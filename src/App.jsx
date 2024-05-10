@@ -1,16 +1,17 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import conf from './conf/conf.js'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
 
     <>
+    {console.log(conf.appwriteBucketId)}
+    {console.log(conf.appwriteCollectionId)}
     <h1>Hello world</h1>
     </>
+    
 
 
   )
