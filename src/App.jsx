@@ -5,6 +5,7 @@ import authService from './appwrite/auth.js'
 import { login, logout } from './features/auth/authSlice.js'
 import { Footer, Header } from './components/index.js'
 import { Outlet } from 'react-router-dom'
+import { clearPost } from './features/post/postSlice.js'
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
           dispatch(login({ userData }))
         } else {
           dispatch(logout())
+          dispatch(clearPost())
         }
 
       })
@@ -33,7 +35,6 @@ function App() {
         <Header />
         <main>
           <Outlet />
-          test
         </main>
         <Footer />
       </div>

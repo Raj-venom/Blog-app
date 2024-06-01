@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import appwriteService from '../appwrite/config'
-import { Container } from 'postcss'
-import { PostCard } from '../components/index'
+import { PostCard, Container } from '../components/index'
+import { useDispatch, useSelector } from 'react-redux'
+import { getPost } from '../features/post/postSlice'
 
 function Home() {
 
     const [posts, setPosts] = useState([])
+    const userData = useSelector(state => state.auth.status)
+    const oldPosts = useSelector(state => state.post.oldPosts)
+    const dispatch = useDispatch()
 
     useEffect(() => {
+        setPosts(oldPosts)
         appwriteService.getPosts().then((posts) => {
             if (posts) {
                 setPosts(posts.documents)
+                const oldPosts = posts.documents
+                dispatch(getPost({oldPosts}))
             }
         })
-    }, [])
+    }, [userData])
 
     if (posts.length === 0) {
         return (
@@ -22,7 +29,10 @@ function Home() {
                     <div className="flex flex-wrap">
                         <div className="p-2 w-full">
                             <h1 className="text-2xl font-bold hover:text-gray-500">
-                                Login to read posts
+
+                                {
+                                    userData ? <div>Oops no posts available</div> : <div>Login to read posts</div>
+                                }
                             </h1>
                         </div>
                     </div>

@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import authService from "../../appwrite/auth"
 import { logout } from "../../features/auth/authSlice"
+import { clearPost } from "../../features/post/postSlice";
 
 function LogoutBtn() {
     const dispatch = useDispatch()
@@ -11,6 +12,7 @@ function LogoutBtn() {
         // logout returns poromise so we can use .then here 
         authService.logout().then(() => {
             dispatch(logout())
+            dispatch(clearPost())
         })
     }
 
