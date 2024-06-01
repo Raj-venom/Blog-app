@@ -4,7 +4,7 @@ import { Button, Input, Select, RTE } from "../index"
 import appwriteService from "../../appwrite/config"
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-
+import { ID } from 'appwrite'
 
 function PostForm({ post }) {
     const { register, handleSubmit, watch, setValue, control, getValues } = useForm(
@@ -18,14 +18,13 @@ function PostForm({ post }) {
             }
         }
     )
-
     const navigate = useNavigate()
-    const userDate = useSelector((state) => state.auth.userDate)
+    const userData = useSelector((state) => state.auth.userData)
 
     const submit = async (data) => {
 
         if (post) {
-            const file = data.image[0] ? appwriteService.uploadFile(data.image[0]) : null
+            const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null
 
             if (file) {
                 appwriteService.deleteFile(post.featuredImage);
@@ -41,14 +40,14 @@ function PostForm({ post }) {
             }
 
         } else {
-            const file = data.image[0] ? appwriteService.uploadFile(data.image[0]) : undefined
+            const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : undefined
 
             if (file) {
                 const fileId = file.$id
                 data.featuredImage = fileId
                 const dbPost = await appwriteService.createPost({
                     ...data,
-                    userId: userDate.$id
+                    userId: userData.$id,
                 })
 
                 if (dbPost) {
@@ -61,7 +60,7 @@ function PostForm({ post }) {
 
     const slugTransform = useCallback((value) => {
 
-        if (value && value == "string")
+        if (value && typeof value === "string")
             return value
                 .trim()
                 .toLowerCase()
@@ -74,9 +73,10 @@ function PostForm({ post }) {
 
     useEffect(() => {
         const subscription = watch((value, { name }) => {
+            const unique = ID.unique(0)
 
             if (name === "title") {
-                setValue("slug", slugTransform(value.title), { shouldValidate: true })
+                setValue("slug", slugTransform(value.title + unique), { shouldValidate: true })
             }
         });
 
@@ -126,7 +126,7 @@ function PostForm({ post }) {
                     className="mb-4"
                     {...register("status", { required: true })}
                 />
-                <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
+                <Button type="submit" bgcolor={post ? "bg-green-500" : undefined} className="w-full">
                     {post ? "Update" : "Submit"}
                 </Button>
             </div>

@@ -56,7 +56,7 @@ function Post() {
                                     Edit
                                 </Button>
                             </Link>
-                            <Button bgColor="bg-red-500" onClick={deletePost}>
+                            <Button bgcolor="bg-red-500" onClick={deletePost}>
                                 Delete
                             </Button>
                         </div>

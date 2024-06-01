@@ -10,7 +10,7 @@ const Input = React.forwardRef(function Input(
     ref
 ) {
 
-    const id = useId
+    const id = useId()
     return (
         <div className=' w-full'>
             {label && <label
